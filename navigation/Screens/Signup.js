@@ -32,14 +32,14 @@ export default function Signup({navigation})
            <View style={styles.small}>
                <Text style={styles.EntryText}> Signup with username and password</Text>
                <TextInput style={styles.Inputs}
-                       placeholder={error?"wrong username or username already taken":"username"}
-                       placeholderTextColor={error?"red":"black"}
+                       placeholder={errors?"wrong username or username already taken":"username"}
+                       placeholderTextColor={errors?"red":"black"}
                        onChangeText={setUsername}
                        value={username}/>
 
                <TextInput style={styles.Inputs}
-                       placeholder={error?"wrong password":"password"}
-                       placeholderTextColor={error?"red":"black"}
+                       placeholder={errors?"wrong password":"password"}
+                       placeholderTextColor={errors?"red":"black"}
                        onChangeText={setPassword}
                        value={password}
                        secureTextEntry
@@ -57,6 +57,7 @@ export default function Signup({navigation})
                         console.log(response);
                         Alert.alert("Employee registered");
                         navigation.navigate('login');
+                        
                     })
                     .catch(error=>{
                         setErrors(true);
