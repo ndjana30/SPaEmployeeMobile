@@ -15,7 +15,7 @@ export default function Signup({navigation})
     const[password,setPassword]=useState('');
     const[jwtToken,setJwtToken]=useState('');
     const url=require('./spa2.jpg');
-    const [error,setError]=useState(false);
+    const [errors,setErrors]=useState(false);
     
     return(
         <SafeAreaView>
@@ -59,7 +59,7 @@ export default function Signup({navigation})
                         navigation.navigate('login');
                     })
                     .catch(error=>{
-                        setError(true);
+                        setErrors(true);
                         console.info(error);
                     })
                        }}
