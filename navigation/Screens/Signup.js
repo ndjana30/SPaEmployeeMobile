@@ -15,6 +15,7 @@ export default function Signup({navigation})
     const[password,setPassword]=useState('');
     const[jwtToken,setJwtToken]=useState('');
     const url=require('./spa2.jpg');
+    const [error,setError]=useState(false);
     
     return(
         <SafeAreaView>
@@ -31,14 +32,14 @@ export default function Signup({navigation})
            <View style={styles.small}>
                <Text style={styles.EntryText}> Signup with username and password</Text>
                <TextInput style={styles.Inputs}
-                       placeholder="username"
-                       placeholderTextColor="black"
+                       placeholder={error?"wrong username or username already taken":"username"}
+                       placeholderTextColor={error?"red":"black"}
                        onChangeText={setUsername}
                        value={username}/>
 
                <TextInput style={styles.Inputs}
-                       placeholder="password"
-                       placeholderTextColor="black"
+                       placeholder={error?"wrong password":"password"}
+                       placeholderTextColor={error?"red":"black"}
                        onChangeText={setPassword}
                        value={password}
                        secureTextEntry
@@ -58,6 +59,7 @@ export default function Signup({navigation})
                         navigation.navigate('login');
                     })
                     .catch(error=>{
+                        setError(true);
                         console.info(error);
                     })
                        }}
