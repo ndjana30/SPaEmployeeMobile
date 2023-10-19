@@ -16,6 +16,7 @@ export default function Signup({navigation})
     const[jwtToken,setJwtToken]=useState('');
     const url=require('./spa2.jpg');
     const [errors,setErrors]=useState(false);
+    const[userSizeError,setUserSizeError]=useState('username');
     
     return(
         <SafeAreaView>
@@ -55,12 +56,15 @@ export default function Signup({navigation})
                     })
                     .then(response=>{
                         console.log(response);
+                        
                         Alert.alert("Employee registered");
                         navigation.navigate('login');
                         
                     })
                     .catch(error=>{
+                        Alert.alert('wrong credentials');
                         setErrors(true);
+                        
                         console.info(error);
                     })
                        }}
