@@ -1,5 +1,5 @@
 import {React,useEffect,useState,useRef} from "react";
-import {Alert,View,Text,Image,SafeAreaView,TextInput, StyleSheet, TouchableOpacity} from "react-native";
+import {Alert,View,Text,Image,SafeAreaView,TextInput, StyleSheet, TouchableOpacity,ActivityIndicator} from "react-native";
 import { Button, Icon } from "react-native-elements";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
@@ -10,6 +10,7 @@ export default function RealSignup({navigation})
     const[password,setPassword]=useState('');
     const[jwtToken,setJwtToken]=useState('');
     const[error,setError]=useState(false);
+    const[isLoading,setIsLoading]=useState(false);
 
     return(
         
@@ -26,25 +27,29 @@ export default function RealSignup({navigation})
                     <Icon name="user" size={20} type="font-awesome" style={{marginTop:15}} />
 
                     <TextInput 
-                    style={styles.TextInput} 
-                    placeholder={error?"username already taken":"username"}
+                    style={error?styles.TextInputError:styles.TextInput} 
+                    placeholder="username"
                     placeholderTextColor={error?"red":"black"}
                     onChangeText={setUsername}
-                    value={username} />
+                    value={username}/>
                 </View>
                 <View style={{flexDirection:"row",borderBottomColor:"#666",borderBottomWidth:1, padding:5}}>
                     <Icon name="lock" size={20} type="font-awesome" style={{marginTop:15}} />
-                    <TextInput 
+                    <TextInput
                     style={styles.PasswordInput} 
-                    placeholder="password" 
-                    placeholderTextColor={error?"red":"black"}
-                    secureTextEntry 
+                    placeholder="password"
+                    placeholderTextColor="black"
+                    secureTextEntry
                     onChangeText={setPassword}
                     value={password}/>
                 </View>
+                {isLoading?(<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color="blue" />
+                    </View>):void(0)}
                 <View style={{marginTop:10,flexDirection:"row",padding:5,alignItems:'center',alignSelf:'center'}}>
                     <TouchableOpacity onPress={()=>{
-                        axios.post("https://spa-fq2z.onrender.com/api/v1/auth/employee/register",
+                        setIsLoading(true);
+                        axios.post("https://wellnessspa237.onrender.com/api/v1/auth/employee/register",
                         {
                             username:username,
                             password:password
@@ -53,10 +58,14 @@ export default function RealSignup({navigation})
                             console.log(response);
                             Alert.alert("registration succesfull");
                             navigation.navigate('login');
+                            setIsLoading(false);
                         })
                         .catch(error=>{
                             console.info(error);
                             setError(true);
+                            setUsername('Username already exists');
+                            setIsLoading(false);
+                            
                         })
                     }}
                     style={styles.Button}>
@@ -76,6 +85,13 @@ const styles = StyleSheet.create({
     TextInput:{
         marginLeft:5,
         color:"black",
+        fontSize:12,
+        width:"90%"
+        
+    },
+    TextInputError:{
+        marginLeft:5,
+        color:"red",
         fontSize:12,
         width:"90%"
         

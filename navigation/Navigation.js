@@ -16,7 +16,9 @@ export default function Navigation()
     return(
         <NavigationContainer>
             <Stack.Navigator screenOptions={{headerShown:false, headerBackButtonMenuEnabled:false}}>
-                <Stack.Screen name='signup' component={RealSignup}/>
+                <Stack.Screen name='signup' component={RealSignup} options={()=>{
+                    
+                }}/>
                 <Stack.Screen name='login' component={RealLogin}/>
                 <Stack.Screen name="employee" component={RealEmployee}/>
                 

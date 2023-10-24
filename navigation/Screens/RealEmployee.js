@@ -1,5 +1,5 @@
 import {React,useEffect,useState,useRef} from "react";
-import {Alert,View,Text,Image,SafeAreaView,TextInput, StyleSheet, TouchableOpacity} from "react-native";
+import {Alert,View,Text,Image,SafeAreaView,TextInput, StyleSheet, TouchableOpacity, ActivityIndicator} from "react-native";
 import { Button, Icon } from "react-native-elements";
 import { useRoute } from "@react-navigation/native";
 import { Dropdown } from 'react-native-element-dropdown';
@@ -14,12 +14,23 @@ export default function RealEmployee({navigation})
     const[cost,setCost] = useState(0);
     const[type,setType]=useState('');
     const[choice,setChoise]=useState('');
+    const[isLoading,setIsLoading]=useState(false);
     const token = useRoute().params.token;
-    const services=[{label: 'Coiffure Homme', value: 'Coiffure Homme'},
-                    {label: 'Coiffure Femme', value: 'Coiffure Femme'},
+    const services=[{label: 'Coif H', value: 'Coif H'},
+                    {label: 'Coif F', value: 'Coif F'},
+                    {label: 'Coif Marriés ', value: 'Coif Marriés'},
+                    {label: 'Manicure', value: 'manicure'},
+                    {label: 'Pedicure', value: 'Pedicure'},
                     {label: 'Hammam', value: 'Hammam'},
                     {label: 'Sauna', value: 'Sauna'},
-                    {label: 'Massage', value: 'Massage'}
+                    {label: 'Massage', value: 'Massage'},
+                    {label: 'Onglerie', value: 'Onglerie'},
+                    {label: 'Les épilations ALC', value: 'Les épilations ALC'},
+                    {label: 'Massage Théra..', value: 'Massage Théra..'},
+                    {label:'Massage aminci..', value:'Massage aminci..'},
+                    {label:'Extension de cils', value:'Extension de cils'},
+                    {label:'Dermopigmentation', value:'Dermopigmentation'},
+                    
                 ];
                 
     const types=[
@@ -37,7 +48,7 @@ export default function RealEmployee({navigation})
     function addProduct(client_id,name,cost,type)
     {
         
-    axios.post("https://spa-fq2z.onrender.com/api/v1/product/add",
+    axios.post("https://wellnessspa237.onrender.com/api/v1/product/add",
     {
         name:name,
         type:type,
@@ -51,11 +62,14 @@ export default function RealEmployee({navigation})
             setName('');
             setCost(0);
             setType('');
-            setClientId(0);
+            setClientId('');
+            setIsLoading(false);
         })
         .catch(error=>{
             console.info(error);
             setError(true);
+            setClientId("Wrong Client Id");
+            setIsLoading(false);
         })
              
     }
@@ -74,12 +88,12 @@ export default function RealEmployee({navigation})
                     <Icon name="user" size={20} type="font-awesome" style={{marginTop:15}} />
 
                     <TextInput 
-                    style={styles.TextInput} 
+                    style={error?styles.TextInputError:styles.TextInput} 
                     keyboardType="numeric"
-                    placeholder={error?"wrong client number":"client number"}
-                    placeholderTextColor={error?"red":"black"}
+                    placeholder="client number"
+                    placeholderTextColor="black"
                     onChangeText={setClientId}
-                    value={client_id} />
+                    value={client_id}/>
                 </View>
                 <View style={{flexDirection:"row",borderBottomColor:"#666",borderBottomWidth:1, padding:5}}>
                     {/* <Icon name="envelope" size={20} type="font-awesome" style={{marginTop:15}} /> */}
@@ -95,7 +109,7 @@ export default function RealEmployee({navigation})
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={!isFocus ? 'Select item' : '...'}
+          placeholder={!isFocus ? 'Select Service' : '...'}
           searchPlaceholder="Search..."
           value={value}
           search
@@ -128,7 +142,7 @@ export default function RealEmployee({navigation})
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={!isFocus ? 'Select item' : '...'}
+          placeholder={!isFocus ? 'Select Type' : '...'}
           searchPlaceholder="Search..."
           value={valueType}
           search
@@ -151,8 +165,12 @@ export default function RealEmployee({navigation})
                     onChangeText={setCost}
                     value={cost}/>
                 </View>
+                {isLoading?(<View>
+                    <ActivityIndicator size="large" color="blue"/>
+                </View>):void(0)}
                 <View style={{marginTop:10,flexDirection:"row",padding:5,alignItems:'center',alignSelf:'center'}}>
                     <TouchableOpacity onPress={()=>{
+                        setIsLoading(true);
                         addProduct(client_id,name,cost,type);
                         
                     }}
@@ -171,6 +189,13 @@ const styles = StyleSheet.create({
     TextInput:{
         marginLeft:5,
         color:"black",
+        fontSize:20,
+        width:"90%"
+        
+    },
+    TextInputError:{
+        marginLeft:5,
+        color:"red",
         fontSize:20,
         width:"90%"
         
